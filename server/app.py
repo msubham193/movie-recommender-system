@@ -65,7 +65,7 @@ def home():
     return "Sonu"
 
 
-@app.route('/api/similarity/<name>', methods=['POST'])
+@app.route('/api/similarity/<name>', methods=['POST','GET'])
 @cross_origin()
 def similarity(name):
     print(name)
