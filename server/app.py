@@ -15,10 +15,12 @@ data = dataPreprocessing()
 
 
 def createSimilarity():
+    data = pd.read_csv('movie.csv')  # reading the dataset
     cv = CountVectorizer()
     countMatrix = cv.fit_transform(data['comb'])
+    # creating the similarity matrix
     similarity = cosine_similarity(countMatrix)
-    return similarity
+    return (data, similarity)
 
 
 def getAllMovies():
@@ -28,8 +30,11 @@ def getAllMovies():
 
 def Recommend(movie):
     movie = movie.lower()
-    data = dataPreprocessing()
-    similarity = createSimilarity()
+    try:
+        data.head()
+        similarity.shape
+    except:
+        (data, similarity) = createSimilarity()
     if movie not in data['movie_title'].unique():
         return 'Sorry! The movie you requested is not present in our database'
     else:
