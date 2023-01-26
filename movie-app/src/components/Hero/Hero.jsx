@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Typewriter from 'typewriter-effect';
 const Hero = ({ movies }) => {
   const [name, setName] = useState("");
@@ -41,7 +41,7 @@ const Hero = ({ movies }) => {
         alt=""
         className="object-fill  brightness-50 h-full relative w-full rounded-2xl"
       />
-      <div className="absolute w-[90%] md:w-[50%]   font-mono">
+      <div className="absolute w-[90%] md:w-[50%]  md:text-left text-center font-mono">
         <h1 className="text-white font-extrabold text-2xl md:text-5xl animate-bounce tracking-wider">
           Welcome.
         </h1>
@@ -49,11 +49,11 @@ const Hero = ({ movies }) => {
           <Typewriter options={{autoStart:true,loop:true,delay:40,strings:["Search here to get AI based movies Recommendation !","Developed & Designed by Subham Mishra 😎😎"]}}></Typewriter>
         </p>
 
-        <div className="flex items-center mt-7">
-          <div className="flex space-x-1 w-full">
+        <div className="flex items-center mt-5 md:mt-7">
+          <div className="flex space-x-1  w-full md:p-0 p-4">
             <input
               type="text"
-              className="block w-full  px-4 py-2 text-purple-700 bg-white border rounded-lg focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40"
+              className="block w-full md:text-base text-sm   px-4 py-2 text-purple-700 bg-white border rounded-lg focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40"
               placeholder="Search movies..."
               onChange={handleOnchange}
             />
@@ -79,7 +79,7 @@ const Hero = ({ movies }) => {
           </div>
         </div>
         {notFound ? (
-          <div className="NotFound">
+          <div className="NotFound text-red-500 text-2xl">
             Sorry! The Movie You Searched for is not present in our data base
           </div>
         ) : null}
@@ -87,7 +87,7 @@ const Hero = ({ movies }) => {
           <div className="searchList bg-white absolute rounded-lg z-10">
             {filteredMovie.slice(0, 10).map((movie) => (
               <div
-                className="searchItem hover:bg-slate-300 p-1 px-3 border-b-2"
+                className="searchItem text-xs md:text-base hover:bg-slate-300 p-1 px-3 border-b-2"
                 onClick={() => navigate(`/movie/${movie}`)}
               >
                 {movie}

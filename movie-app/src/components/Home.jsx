@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import requests from "../Requests";
 import Hero from "./Hero/Hero";
 import Loading from "./Loading/Loading";
@@ -38,25 +38,28 @@ const Home = () => {
 
   React.useEffect(() => {
     let movie = "Avatar";
-    movie = localStorage.getItem("movie") ? localStorage.getItem("movie") : "Avatar";
+    movie = localStorage.getItem("movie")
+      ? localStorage.getItem("movie")
+      : "Avatar";
 
-    fetch("/api/movies")
-    .then((response) => response.json().then((data) => setMovies(data.arr)))
-    .catch((error) => {
-      console.log(error);
-    });
+    fetch("api/movies")
+      .then((response) => response.json().then((data) => setMovies(data.arr)))
+      .catch((error) => {
+        console.log(error);
+      });
 
-  
-    if (movie.length=== 0) {
-    
+    if (movie.length === 0) {
       fetch(requests.requestPopular)
         .then((response) =>
-          response.json().then((data) => {setRecommendation(data.results);setLoading(false);})
+          response.json().then((data) => {
+            setRecommendation(data.results);
+            setLoading(false);
+          })
         )
         .catch((error) => console.log(error));
       console.log(recommendation);
     } else {
-      fetch(`/api/similarity/${movie}`).then((Response) =>
+      fetch(`api/similarity/${movie}`).then((Response) =>
         Response.json()
           .then((data) => {
             getRecommendationMovie(data);
@@ -67,8 +70,6 @@ const Home = () => {
           })
       );
     }
-
-   
   }, [loading, movie]);
 
   return (
@@ -78,7 +79,11 @@ const Home = () => {
       ) : (
         <div className="md:mt-20 ">
           <Hero movies={movies} />
-          <Slider moviess={recommendation} id={localStorage.getItem("movie")==null?1:2} name={movie} />
+          <Slider
+            moviess={recommendation}
+            id={localStorage.getItem("movie") == null ? 1 : 2}
+            name={movie}
+          />
         </div>
       )}
     </>
