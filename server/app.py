@@ -1,3 +1,4 @@
+from joblib import dump, load
 import pandas as pd
 from flask.helpers import send_from_directory
 from flask_cors import CORS, cross_origin
@@ -6,21 +7,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 from flask import Flask, request, render_template, jsonify
 
 
-def dataPreprocessing():
-    data = pd.read_csv('movie.csv')
-    return data
-
-
-data = dataPreprocessing()
-
-
-def createSimilarity():
-    data = pd.read_csv('movie.csv')  # reading the dataset
-    cv = CountVectorizer()
-    countMatrix = cv.fit_transform(data['comb'])
-    # creating the similarity matrix
-    similarity = cosine_similarity(countMatrix)
-    return (data, similarity)
+movies_dict = load(open('movies_dict.joblib', 'rb'))
+similarity = load(open('similarity.joblib', 'rb'))
+movies = pd.DataFrame(movies_dict)
 
 
 def getAllMovies():
@@ -28,25 +17,25 @@ def getAllMovies():
     return list(data['movie_title'].str.capitalize())
 
 
-def Recommend(movie):
+def Recommend2(movie: str):
     movie = movie.lower()
-    try:
-        data.head()
-        similarity.shape
-    except:
-        (data, similarity) = createSimilarity()
-    if movie not in data['movie_title'].unique():
+
+    if movie not in movies['movie_title'].unique():
         return 'Sorry! The movie you requested is not present in our database'
     else:
-        movieIdx = data.loc[data['movie_title'] == movie].index[0]
-        lst = list(enumerate(similarity[movieIdx]))
-        lst = sorted(lst, key=lambda x: x[1], reverse=True)
-        lst = lst[1:30]
-        movieList = []
-        for i in range(len(lst)):
-            a = lst[i][0]
-            movieList.append(data['movie_title'][a])
-        return movieList
+        movie_idx = movies[movies['movie_title'] == movie].index[0]
+        distances = similarity[movie_idx]
+        movies_list = sorted(list(enumerate(distances)),
+                             reverse=True, key=lambda x: x[1])[1:30]
+
+        recommended_movies = []
+        recommended_movies_posters = []
+        for i in movies_list:
+            # movie_id = movies.iloc[i[0]].index[0]
+            recommended_movies.append(movies.iloc[i[0]].movie_title)
+        # recommended_movies_posters.append(fetch_poster(movie_id))
+
+        return recommended_movies
 
 
 app = Flask(__name__, static_folder='movie-app/public',
@@ -55,9 +44,9 @@ app = Flask(__name__, static_folder='movie-app/public',
 CORS(app)
 
 
-@app.route('/api/movies', methods=['GET'])
+@app.route('/api/movies')
 @cross_origin()
-def movies():
+def moviess():
     # returns all the movies in the dataset
     movies = getAllMovies()
     result = {'arr': movies}
@@ -72,10 +61,11 @@ def home():
 
 @app.route('/api/similarity/<name>')
 @cross_origin()
-def similarity(name):
+def similarityy(name: str):
     print(name)
     movie = name
-    recommendation = Recommend(movie)
+    recommendation = Recommend2(name)
+    # return recommendation
     if type(recommendation) == type('string'):
         resultArray = recommendation.split('---')
         apiResult = {'movies': resultArray}
