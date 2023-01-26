@@ -11,6 +11,7 @@ I used COSINE SIMILARITY algorithm to get similarity when user chooses a movie .
 
 
 
+https://www.buymeacoffee.com/msubham193e
 
 
 ## Features ⭐️
