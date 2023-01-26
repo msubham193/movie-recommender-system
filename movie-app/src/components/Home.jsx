@@ -42,7 +42,7 @@ const Home = () => {
       ? localStorage.getItem("movie")
       : "Avatar";
 
-    fetch("api/movies")
+    fetch("https://movie-recommender-system2.onrender.com/api/movies")
       .then((response) => response.json().then((data) => setMovies(data.arr)))
       .catch((error) => {
         console.log(error);
@@ -59,7 +59,7 @@ const Home = () => {
         .catch((error) => console.log(error));
       console.log(recommendation);
     } else {
-      fetch(`api/similarity/${movie}`).then((Response) =>
+      fetch(`https://movie-recommender-system2.onrender.com/api/similarity/${movie}`).then((Response) =>
         Response.json()
           .then((data) => {
             getRecommendationMovie(data);
